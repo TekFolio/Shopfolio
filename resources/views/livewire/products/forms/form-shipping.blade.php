@@ -1,0 +1,108 @@
+<div>
+    <div class="md:grid md:grid-cols-3 md:gap-6">
+        <div class="md:col-span-1">
+            <div class="px-4 sm:px-0">
+                <h3 class="text-lg font-semibold leading-6 text-secondary-900 dark:text-white">{{ __('shopfolio::messages.shipping') }}</h3>
+                <p class="mt-4 text-sm leading-5 text-secondary-500 dark:text-secondary-400">
+                    {{ __('shopfolio::pages/products.shipping.description') }}
+                </p>
+            </div>
+        </div>
+        <div class="mt-5 md:mt-0 md:col-span-2">
+            <div class="shadow sm:rounded-md sm:overflow-hidden">
+                <div class="px-4 py-5 bg-white dark:bg-secondary-800 sm:px-5 space-y-4">
+                    <div class="relative flex items-start">
+                        <div class="flex items-center h-5">
+                            <x-shopfolio::forms.checkbox wire:model.defer="backorder" id="backorder" />
+                        </div>
+                        <div class="ml-3 text-sm leading-5">
+                            <x-shopfolio::label for="backorder" :value="__('shopfolio::pages/products.product_can_returned')" />
+                            <p class="text-secondary-500 dark:text-secondary-400">{{ __('shopfolio::pages/products.product_can_returned_help_text') }}</p>
+                        </div>
+                    </div>
+                    <div class="relative flex items-start">
+                        <div class="flex items-center h-5">
+                            <x-shopfolio::forms.checkbox wire:model.lazy="requiresShipping" id="required_shipping" />
+                        </div>
+                        <div class="ml-3 text-sm leading-5">
+                            <x-shopfolio::label for="required_shipping" :value="__('shopfolio::pages/products.product_shipped')" />
+                            <p class="text-secondary-500 dark:text-secondary-400">{{ __('shopfolio::pages/products.product_shipped_help_text') }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @if($requiresShipping)
+        <div class="hidden sm:block">
+            <div class="py-5">
+                <div class="border-t border-secondary-200 dark:border-secondary-700"></div>
+            </div>
+        </div>
+
+        <div class="mt-10 sm:mt-0">
+            <div class="md:grid md:grid-cols-3 md:gap-6">
+                <div class="md:col-span-1">
+                    <div class="px-4 sm:px-0">
+                        <h3 class="text-lg font-semibold leading-6 text-secondary-900 dark:text-white">{{ __('shopfolio::pages/products.shipping.package_dimension') }}</h3>
+                        <p class="mt-4 text-sm leading-5 text-secondary-500 dark:text-secondary-400">
+                            {{ __('shopfolio::pages/products.shipping.package_dimension_description') }}
+                        </p>
+                    </div>
+                </div>
+                <div class="mt-5 md:mt-0 md:col-span-2">
+                    <div class="bg-white dark:bg-secondary-800 shadow sm:rounded-md sm:overflow-hidden p-4 sm:p-5">
+                        <div class="grid gap-4 sm:grid-cols-2 sm:gap-6 sm:gap-y-4">
+                            <x-shopfolio::forms.group class="sm:col-span-1" label="shopfolio::layout.forms.label.width">
+                                <x-shopfolio::forms.input wire:model.defer="widthValue" id="WidthValue" type="text" placeholder="0" />
+                                <div class="absolute inset-y-0 right-0 flex items-center">
+                                    <x-shopfolio::forms.select wire:model.defer="WidthUnit" aria-label="{{ __('shopfolio::layout.forms.label.width_unit') }}" class="py-0 pl-2 pr-7 border-transparent bg-transparent">
+                                        <option value="cm">cm</option>
+                                        <option value="m">m</option>
+                                    </x-shopfolio::forms.select>
+                                </div>
+                            </x-shopfolio::forms.group>
+                            <x-shopfolio::forms.group class="sm:col-span-1" label="shopfolio::layout.forms.label.height">
+                                <x-shopfolio::forms.input wire:model.defer="heightValue" id="heightValue" type="text" class="pl-3 pr-12" placeholder="0" />
+                                <div class="absolute inset-y-0 right-0 flex items-center">
+                                    <x-shopfolio::forms.select wire:model.defer="heightUnit" aria-label="{{ __('shopfolio::layout.forms.label.height_unit') }}" class="py-0 pl-2 pr-7 border-transparent bg-transparent">
+                                        <option value="cm">cm</option>
+                                        <option value="m">m</option>
+                                    </x-shopfolio::forms.select>
+                                </div>
+                            </x-shopfolio::forms.group>
+                            <x-shopfolio::forms.group class="sm:col-span-1" label="shopfolio::layout.forms.label.weight">
+                                <x-shopfolio::forms.input wire:model.defer="weightValue" id="weightValue" type="text" class="block w-full pl-3 pr-12" placeholder="0" />
+                                <div class="absolute inset-y-0 right-0 flex items-center">
+                                    <x-shopfolio::forms.select wire:model.defer="weightUnit" aria-label="{{ __('shopfolio::layout.forms.label.weight_unit') }}" class="py-0 pl-2 pr-7 border-transparent bg-transparent">
+                                        <option value="kg">kg</option>
+                                        <option value="g">g</option>
+                                    </x-shopfolio::forms.select>
+                                </div>
+                            </x-shopfolio::forms.group>
+                            <x-shopfolio::forms.group class="sm:col-span-1" label="shopfolio::layout.forms.label.volume">
+                                <x-shopfolio::forms.input wire:model.defer="volumeValue" id="VolumeValue" type="text" class="block w-full pl-3 pr-12" placeholder="0" />
+                                <div class="absolute inset-y-0 right-0 flex items-center">
+                                    <x-shopfolio::forms.select wire:model.defer="VolumeUnit" aria-label="{{ __('shopfolio::layout.forms.label.volume_unit') }}" class="py-0 pl-2 pr-7 border-transparent bg-transparent">
+                                        <option value="l">l</option>
+                                        <option value="ml">ml</option>
+                                    </x-shopfolio::forms.select>
+                                </div>
+                            </x-shopfolio::forms.group>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endif
+
+    <div class="mt-6 pt-5 border-t border-secondary-200 dark:border-secondary-700">
+        <div class="flex justify-end">
+            <x-shopfolio::buttons.primary wire:click="store" wire.loading.attr="disabled" type="button">
+                <x-shopfolio::loader wire:loading wire:target="store" class="text-white" />
+                {{ __('shopfolio::layout.forms.actions.update') }}
+            </x-shopfolio::buttons.primary>
+        </div>
+    </div>
+</div>

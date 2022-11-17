@@ -1,0 +1,20 @@
+/**
+* Shopfolio Tailwind Style
+*
+* @version 2.0.0
+* @since May 2021
+* @author Godwin Stephen<stevebrain@techieslab.net>
+* @site https://techieslab.net
+*/
+@import '~choices.js/public/assets/styles/choices.css';
+@import '~tom-select/dist/css/tom-select.default.min.css';
+@import '~flatpickr/dist/themes/light.css';
+@import '~intl-tel-input/build/css/intlTelInput.css';
+@import '~filepond/dist/filepond.min.css';
+
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+@import 'base.css';
+@import 'components.css';

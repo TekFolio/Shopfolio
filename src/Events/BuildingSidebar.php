@@ -1,0 +1,41 @@
+<?php
+
+namespace Shopfolio\Events;
+
+use Maatwebsite\Sidebar\Menu;
+
+class BuildingSidebar
+{
+    /**
+     * Menu.
+     *
+     * @var Menu
+     */
+    protected $menu;
+
+    /**
+     * BuildingSidebar constructor.
+     */
+    public function __construct(Menu $menu)
+    {
+        $this->menu = $menu;
+    }
+
+    /**
+     * Add a menu group to the menu.
+     */
+    public function add(Menu $menu)
+    {
+        $this->menu->add($menu);
+    }
+
+    /**
+     * Get the current Laravel-Sidebar menu.
+     *
+     * @return Menu
+     */
+    public function getMenu()
+    {
+        return $this->menu;
+    }
+}

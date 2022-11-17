@@ -1,0 +1,52 @@
+<x-shopfolio::modal
+    headerClasses="p-4 sm:px-6 sm:py-4 border-b border-secondary-100 dark:border-secondary-700"
+    contentClasses="relative p-4 sm:px-6 sm:px-5"
+    footerClasses="px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse"
+>
+
+    <x-slot name="title">
+        <span class="flex flex-col">
+            {{ __('New permission') }}
+            <span class="mt-0.5 font-normal text-sm leading-5 text-secondary-500 dark:text-secondary-400">
+                {{ __('Add a new permission and directly assign to this role.') }}
+            </span>
+        </span>
+    </x-slot>
+
+    <x-slot name="content">
+        <div class="grid gap-4 sm:grid-cols-2 sm:gap-6">
+            <x-shopfolio::forms.group label="Group name" for="group" class="sm:col-span-2">
+                <x-shopfolio::forms.select id="group" wire:model.defer="group">
+                    <option>{{ __('No group') }}</option>
+                    @foreach($groups as $key => $value)
+                        <option value="{{ $key }}">{{ $value }}</option>
+                    @endforeach
+                </x-shopfolio::forms.select>
+            </x-shopfolio::forms.group>
+            <x-shopfolio::forms.group label="Permission name (in lowercase)" for="permission_name" class="sm:col-span-2" :error="$errors->first('name')" isRequired>
+                <x-shopfolio::forms.input wire:model.defer="name" type="text" id="permission_name" placeholder="create_post, manage_articles, etc" autocomplete="off" />
+            </x-shopfolio::forms.group>
+            <x-shopfolio::forms.group label="Display name" for="permission_display_name" class="sm:col-span-2" :error="$errors->first('display_name')" isRequired>
+                <x-shopfolio::forms.input wire:model.defer="display_name" type="text" id="permission_display_name" placeholder="Create Blog posts" autocomplete="off" />
+            </x-shopfolio::forms.group>
+            <x-shopfolio::forms.group label="Description" for="permission_description" class="sm:col-span-2">
+                <x-shopfolio::forms.textarea wire:model.defer="description" id="permission_description" />
+            </x-shopfolio::forms.group>
+        </div>
+    </x-slot>
+
+    <x-slot name="buttons">
+        <span class="flex w-full rounded-md shadow-sm sm:ml-3 sm:w-auto">
+            <x-shopfolio::buttons.primary wire:click="save" type="button">
+                <x-shopfolio::loader wire:loading wire:target="save" class="text-white" />
+                {{ __('Save') }}
+            </x-shopfolio::buttons.primary>
+        </span>
+        <span class="mt-3 flex w-full rounded-md shadow-sm sm:mt-0 sm:w-auto">
+            <x-shopfolio::buttons.default wire:click="$emit('closeModal')" type="button">
+                {{ __('Cancel') }}
+            </x-shopfolio::buttons.default>
+        </span>
+    </x-slot>
+
+</x-shopfolio::modal>

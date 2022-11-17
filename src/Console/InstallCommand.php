@@ -1,0 +1,141 @@
+<?php
+
+namespace Shopfolio\Console;
+
+use Illuminate\Console\Command;
+use Shopfolio\Providers\ShopfolioServiceProvider;
+use Spatie\MediaLibrary\MediaLibraryServiceProvider;
+use Symfony\Component\Console\Helper\ProgressBar;
+
+class InstallCommand extends Command
+{
+    /**
+     * @var ProgressBar
+     */
+    protected $progressBar;
+
+    /**
+     * The name and signature of the console command.
+     *
+     * @var string
+     */
+    protected $signature = 'shopfolio:install';
+
+    /**
+     * The console command description.
+     *
+     * @var string
+     */
+    protected $description = 'Install Shopfolio e-commerce administration';
+
+    /**
+     * Create a new command instance.
+     */
+    public function __construct()
+    {
+        parent::__construct();
+
+        if (file_exists(config_path('shopfolio/system.php'))) {
+            $this->setHidden(true);
+        }
+    }
+
+    /**
+     * Execute the console command.
+     */
+    public function handle(): void
+    {
+        $this->progressBar = $this->output->createProgressBar(3);
+        $this->introMessage();
+        sleep(1);
+
+        $this->info('Installation of Shopfolio package, setup database, publish assets and config files');
+
+        if (! $this->progressBar->getProgress()) {
+            $this->progressBar->start();
+        }
+
+        $this->call('vendor:publish', ['--provider' => ShopfolioServiceProvider::class]);
+        $this->call('vendor:publish', ['--provider' => MediaLibraryServiceProvider::class, '--tag' => 'migrations']);
+        $this->progressBar->advance();
+
+        $this->setupDatabaseConfig();
+        $this->addEnvVariable();
+        $this->call('shopfolio:link');
+        $this->progressBar->advance();
+
+        $this->completeSetup();
+
+        if (! (bool) $this->option('no-interaction')) {
+            (new Thanks($this->output))();
+        }
+    }
+
+    /**
+     * Setup database configuration and seeder.
+     */
+    protected function setupDatabaseConfig(): void
+    {
+        $this->info('Migrating the database tables into your application');
+        $this->call('migrate');
+        $this->progressBar->advance();
+
+        $this->info('Flush data into the database');
+        $this->call('db:seed', ['--class' => 'ShopfolioSeeder']);
+        $this->progressBar->advance();
+
+        // Visually slow down the installation process so that the user can read what's happening
+        usleep(350000);
+    }
+
+    /**
+     * Set env variables.
+     */
+    protected function addEnvVariable(): void
+    {
+        $env = [
+            'SHOPFOLIO_DASHBOARD_PREFIX' => config('shopfolio.routes.prefix'),
+        ];
+
+        $this->progressBar->advance();
+        setEnvironmentValue($env);
+        $this->info('Add SHOPFOLIO_DASHBOARD_PREFIX to .env file');
+    }
+
+    protected function completeSetup(): void
+    {
+        $this->progressBar->finish();
+
+        // Outro message
+        $this->info("
+                                      ,@@@@@@@,
+                              ,,,.   ,@@@@@@/@@,  .oo8888o.
+                           ,&%%&%&&%,@@@@@/@@@@@@,8888\\88/8o
+                          ,%&\\%&&%&&%,@@@\\@@@/@@@88\\88888/88'
+                          %&&%&%&/%&&%@@\\@@/ /@@@88888\\88888'
+                          %&&%/ %&%%&&@@\\ V /@@' `88\\8 `/88'
+                          `&%\\ ` /%&'    |.|        \\ '|8'
+                              |o|        | |         | |
+                              |.|        | |         | |
+       ======================== Installation Complete ======================
+        ");
+
+        $this->comment("Before create an admin user you have to change the extend class of your User Model to The Shopfolio User Model 'Shopfolio\\Framework\\Models\\User\\User'");
+        $this->comment("To create a user, run 'php artisan shopfolio:admin'");
+    }
+
+    protected function introMessage()
+    {
+        // Intro message
+        $this->info('
+                _____ __
+              / ___// /_  ____  ____  ____  ___  _____
+              \__ \/ __ \/ __ \/ __ \/ __ \/ _ \/ ___/
+             ___/ / / / / /_/ / /_/ / /_/ /  __/ /
+            /____/_/ /_/\____/ .___/ .___/\___/_/
+                            /_/   /_/
+
+            Installation started. Please wait...
+        ');
+    }
+}
