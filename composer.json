@@ -1,13 +1,7 @@
 {
   "name": "tekfolio/shopfolio",
-  "description": "An eCommerce administration built with Laravel for create and manage online shop.",
-  "keywords": [
-    "laravel",
-    "livewire components",
-    "admin",
-    "shopfolio",
-    "e-commerce"
-  ],
+  "description": "private ecommerce platform, created from LAShopper",
+  "keywords": [],
   "license": "MIT",
   "authors": [
     {
